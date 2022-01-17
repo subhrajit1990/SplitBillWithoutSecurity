@@ -1,0 +1,144 @@
+/* java -jar splitmybill-0.0.1-SNAPSHOT.jar */
+
+CREATE TABLE `split_group` (
+  `group_id` INT NOT NULL AUTO_INCREMENT,
+  `group_name` VARCHAR(45) NOT NULL,
+  `channel` VARCHAR(45) NOT NULL,
+  `group_type` VARCHAR(45) NOT NULL,
+  `updated_dt` timestamp NULL DEFAULT NULL,
+  `created_dt` timestamp NULL DEFAULT NULL,
+  `members` LONGTEXT NULL,
+  `creator_acct_number` VARCHAR(45) NOT NULL,
+  `master_txn_no` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`group_id`,`creator_acct_number`)); commit;
+  
+  
+  
+CREATE TABLE `split_add_members` (
+  `group_id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_name` varchar(45) NOT NULL,
+  `channel` varchar(45) NOT NULL,
+  `updated_dt` timestamp NULL DEFAULT NULL,
+  `created_dt` timestamp NULL DEFAULT NULL,
+  `member_acct_number` varchar(45) NOT NULL,
+  `master_txn_no` varchar(45) NOT NULL,
+  PRIMARY KEY (`group_id`,`member_acct_number`)
+); commit;
+
+CREATE TABLE `split_bill` (
+  `group_id` int(11) NOT NULL ,
+  `bill_id` varchar(45) NOT NULL,
+  `channel` varchar(45) NOT NULL,
+  `updated_dt` timestamp NULL DEFAULT NULL,
+  `created_dt` timestamp NULL DEFAULT NULL,
+  `master_txn_no` varchar(45) NOT NULL,
+  `bill` LONGTEXT NOT NULL,
+  PRIMARY KEY (`group_id`,`bill_id`)
+); commit;
+
+
+
+CREATE TABLE `to_do` (
+  `todo_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `created_dt` timestamp NULL DEFAULT NULL,
+  `master_txn_no` varchar(45) NOT NULL,
+  `channel` varchar(45) NOT NULL,
+  PRIMARY KEY (`todo_id`)
+) ; commit;
+
+ALTER TABLE `to_do`
+ADD `updated_dt` timestamp NULL DEFAULT NULL; commit;
+
+CREATE TABLE `to_do_list` (
+  `to_do_list_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `todo_id` int(11) unsigned NOT NULL,
+  `created_dt` timestamp NULL DEFAULT NULL,
+  `to_do_list_text` LONGTEXT NOT NULL,
+  PRIMARY KEY (`to_do_list_id`),
+  KEY `todo_id` (`todo_id`),
+  CONSTRAINT `todo_ibfk_1` FOREIGN KEY (`todo_id`) REFERENCES `to_do` (`todo_id`)
+); commit;
+
+ALTER TABLE `to_do_list`
+ADD `updated_dt` timestamp NULL DEFAULT NULL; commit;
+
+
+
+/* HEROKU */
+
+
+
+begin;
+set transaction read write;
+
+CREATE TABLE split_group (
+  group_id SERIAL NOT NULL,
+  group_name VARCHAR(45) NOT NULL,
+  channel VARCHAR(45) NOT NULL,
+  group_type VARCHAR(45) NOT NULL,
+  updated_dt timestamp NULL DEFAULT NULL,
+  created_dt timestamp NULL DEFAULT NULL,
+  members TEXT NULL,
+  creator_acct_number VARCHAR(45) NOT NULL,
+  master_txn_no VARCHAR(45) NOT NULL,
+  PRIMARY KEY (group_id,creator_acct_number)); 
+
+  commit;
+  
+  
+  begin;
+set transaction read write;
+  
+  CREATE TABLE split_add_members (
+  group_id SERIAL NOT NULL,
+  account_name varchar(45) NOT NULL,
+  channel varchar(45) NOT NULL,
+  updated_dt timestamp NULL DEFAULT NULL,
+  created_dt timestamp NULL DEFAULT NULL,
+  member_acct_number varchar(45) NOT NULL,
+  master_txn_no varchar(45) NOT NULL,
+  PRIMARY KEY (group_id,member_acct_number)
+); commit;
+  
+  begin;
+set transaction read write;
+  
+ CREATE TABLE split_bill (
+  group_id int NOT NULL ,
+  bill_id varchar(45) NOT NULL,
+  channel varchar(45) NOT NULL,
+  updated_dt timestamp NULL DEFAULT NULL,
+  created_dt timestamp NULL DEFAULT NULL,
+  master_txn_no varchar(45) NOT NULL,
+  bill TEXT NOT NULL,
+  PRIMARY KEY (group_id,bill_id)
+); commit;
+
+
+
+CREATE TABLE to_do (
+  todo_id SERIAL NOT NULL ,
+  created_dt timestamp NULL DEFAULT NULL,
+  master_txn_no varchar(45) NOT NULL,
+  channel varchar(45) NOT NULL,
+  updated_dt timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (todo_id)); commit;
+
+
+
+-- SQLINES LICENSE FOR EVALUATION USE ONLY
+CREATE SEQUENCE to_do_list_seq;
+
+CREATE TABLE to_do_list (
+  to_do_list_id int check (to_do_list_id > 0) NOT NULL DEFAULT NEXTVAL ('to_do_list_seq'),
+  todo_id int check (todo_id > 0) NOT NULL,
+  created_dt timestamp(0) NULL DEFAULT NULL,
+  to_do_list_text TEXT NULL,
+  updated_dt timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (to_do_list_id)
+ ,
+  CONSTRAINT todo_ibfk_1 FOREIGN KEY (todo_id) REFERENCES to_do (todo_id)
+);
+
+CREATE INDEX todo_id ON to_do_list (todo_id); commit;
+
