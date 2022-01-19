@@ -64,6 +64,22 @@ ADD `updated_dt` timestamp NULL DEFAULT NULL; commit;
 
 
 
+
+
+CREATE TABLE contact_me (
+   `contactId` int(11) NOT NULL AUTO_INCREMENT ,
+   `created_dt` timestamp NULL DEFAULT NULL,
+   `master_txn_no` varchar(45) NOT NULL,
+   `channel` varchar(45) NOT NULL,
+   `name` varchar(500) NOT NULL,
+   `email` varchar(500) NOT NULL,
+   `phone_number` varchar(500) NOT NULL,
+   `updated_dt` timestamp NULL DEFAULT NULL,
+   `message` varchar(500) NOT NULL,
+  PRIMARY KEY (contactId)); commit;
+  
+  
+
 /* HEROKU */
 
 
@@ -141,4 +157,19 @@ CREATE TABLE to_do_list (
 );
 
 CREATE INDEX todo_id ON to_do_list (todo_id); commit;
+
+
+CREATE TABLE contact_me (
+   contactId SERIAL NOT NULL ,
+   created_dt timestamp(0) NULL DEFAULT NULL,
+   master_txn_no varchar(45) NOT NULL,
+   channel varchar(45) NOT NULL,
+   name varchar(500) NOT NULL,
+   email varchar(500) NOT NULL,
+   phone_number varchar(500) NOT NULL,
+  updated_dt timestamp(0) NULL DEFAULT NULL,
+   message varchar(500) NOT NULL,
+  PRIMARY KEY (contactId)); commit;
+  CREATE INDEX contactId ON contact_me (contactId); commit;
+  
 
